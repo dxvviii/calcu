@@ -470,30 +470,28 @@ plus.addActionListener(new ActionListener(){
         });
 
 		
-		JButton cc = new JButton("+/-");
-		cc.setFont(new Font("Calibri", Font.BOLD, 23));
-				cc.setRolloverEnabled(false);
-		cc.setFocusable(false);
-		cc.setBorderPainted(false);
-		cc.setBackground(Color.BLACK);
-		cc.setForeground(new Color(239, 188, 2));
-		cc.addActionListener(new ActionListener(){
-			public void actionperformed(ActionEvent e){
-				String st = jtf.getText();
-					st="";
-			}@Override
-            public void actionPerformed(ActionEvent e) {
-                String st = jtf.getText();
-				int number = Integer.parseInt(st);
-	    	  	if(number>0)
-	    	  		jtf.setText("-"+st);
-				else if(number<0)
-					jtf.setText("+"+st);
-				else
-					jtf.setText("0");
-            }
-		});
+		JButton delete = new JButton("Del");
+delete.setFont(new Font("Calibri", Font.BOLD, 23));
+delete.setRolloverEnabled(false);
+delete.setFocusable(false);
+delete.setBorderPainted(false);
+delete.setBackground(Color.BLACK);
+delete.setForeground(new Color(239, 188, 2));
+delete.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String currentText = jtf.getText();
+        if (!currentText.isEmpty()) {
+            // Remove the last character from the text
+            String newText = currentText.substring(0, currentText.length() - 1);
+            jtf.setText(newText.isEmpty() ? "0" : newText);
+        }
+    }
+});
+panel2.add(delete);
 
+		
+			
 		
     JButton equal = new JButton("=");
 equal.setFont(new Font("Calibri", Font.BOLD, 23));
@@ -503,19 +501,21 @@ equal.setBorderPainted(false);
 equal.setBackground(Color.BLACK);
 equal.setForeground(new Color(239, 188, 2));
 equal.addActionListener(new ActionListener() {
-			@Override
+			@Override 
+			
 			public void actionPerformed(ActionEvent e) {
 				String st = jtf.getText();
 				if (st.equals("0")) {
 					st = "";
 				}
 		        // Assuming you want to perform some calculation when the equal button is pressed
-        try {
-            double result = evaluateExpression(st);
-            jtf.setText(String.valueOf(result));
-        } catch (Exception ex) {
-            jtf.setText("Error");
-        }
+				
+                try {
+                    double result = evaluateExpression(st);
+                    jtf.setText(removeTrailingZero(result));
+                } catch (Exception ex) {
+                    jtf.setText("Error");
+                }
     }
     protected static double evaluateExpression(String st) {
         try {
@@ -580,6 +580,7 @@ equal.addActionListener(new ActionListener() {
 
         // Add a mousePressed binding to the InputMap to trigger the custom action
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), "customAction");
+
         equal.setBounds(50, 400, 300, 50);
         frame.add(equal);
         frame.setVisible(true);
@@ -587,7 +588,7 @@ equal.addActionListener(new ActionListener() {
         frame.add(equal);
         frame.setVisible(true);
 		panel2.add(c);
-		panel2.add(cc);
+		panel2.add(delete);
         panel2.add(percent);
 		panel2.add(divi);
 		panel2.add(seven);
@@ -614,5 +615,15 @@ equal.addActionListener(new ActionListener() {
 			}
 	private static void setBorder(Border createEmptyBorder) {
 	}
+	
+	private static String removeTrailingZero(double result) {
+        if (result == (long) result) {
+            return String.format("%d", (long) result);
+        } else {
+            return String.format("%s", result);
+        }
+    }
 }
+
+
 
